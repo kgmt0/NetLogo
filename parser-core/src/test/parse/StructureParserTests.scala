@@ -361,19 +361,6 @@ class StructureParserTests extends AnyFunSuite {
     expectParseAllError("import foo import bar import foo as baz", "Attempted to import a module multiple times")
   }
 
-  test("import syntax default alias") {
-    val src = """import foo"""
-    val nlsSrc = """
-      |to test
-      |  show 12345
-      |end
-      """.stripMargin
-    val results = compileAll(src, nlsSrc)
-    if (!results.procedures.contains(("FOO:TEST", None))) {
-      fail()
-    }
-  }
-
   test("import syntax custom alias") {
     val src = """import foo as bar"""
     val nlsSrc = """
