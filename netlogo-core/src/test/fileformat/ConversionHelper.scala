@@ -52,7 +52,7 @@ object VidExtensionManager extends DummyExtensionManager {
   import org.nlogo.core.{ Syntax, Primitive, PrimitiveCommand, PrimitiveReporter}
 
   override def anyExtensionsLoaded = true
-  override def importExtension(path: String, errors: org.nlogo.core.ErrorSource): Unit = { }
+  override def importExtension(path: String, module: Option[String], errors: org.nlogo.core.ErrorSource): Unit = { }
   override def replaceIdentifier(name: String): Primitive = {
     name match {
       case "VID:SAVE-RECORDING" =>
