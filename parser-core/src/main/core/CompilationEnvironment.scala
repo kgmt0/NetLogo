@@ -5,7 +5,11 @@ package org.nlogo.core
 trait CompilationEnvironment {
   def profilingEnabled: Boolean
   def resolvePath(path: String): String
-  def resolveModulePath(currentFile:Option[String], pathComponents: Seq[String]): Option[(String, Seq[String])]
+  def resolveModulePath(
+    currentFile:Option[String],
+    upCount: Integer,
+    pathComponents: Seq[String]
+  ): Option[(String, Seq[String])]
   def exists(path: String): Boolean
   def getSource(filename: String): String
 }
@@ -13,7 +17,7 @@ trait CompilationEnvironment {
 class DummyCompilationEnvironment extends CompilationEnvironment {
   def profilingEnabled = false
   def resolvePath(filename: String): String = filename
-  def resolveModulePath(currentFile: Option[String], modulePath: Seq[String]) = None
+  def resolveModulePath(currentFile: Option[String], upCount: Integer, modulePath: Seq[String]) = None
   def exists(filename: String): Boolean = false
   def getSource(filename: String): String =
     if (filename == "aggregate") "" else throw new UnsupportedOperationException

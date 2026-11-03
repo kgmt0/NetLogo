@@ -80,7 +80,7 @@ object StructureParser {
               val confusingImportParts = Seq(Some(fullImportPath), Some(lastImportComponent), importAlias).flatten
 
               val (basePath, suppliedPaths) =
-                compilationEnvironment.resolveModulePath(currentImport.filename, currentImport.pathComponents).getOrElse(("", Seq()))
+                compilationEnvironment.resolveModulePath(currentImport.filename, currentImport.upCount, currentImport.pathComponents).getOrElse(("", Seq()))
 
               if (suppliedPaths.isEmpty) {
                 exception(I18N.errors.getN("compiler.StructureParser.importNotFound", currentImport.pathComponents.mkString(":")), currentImport.token)
@@ -105,12 +105,12 @@ object StructureParser {
                       } else {
                         val path = relativePath.replace(separator, ":").toUpperCase(Locale.ROOT).stripSuffix(".NLM")
 
-                        if (path.nonEmpty) {
+                        if (currentImport.upCount == 0 && path.nonEmpty) {
                           val basePrefix = s"$butLastImportComponent:"
 
                           s"${path.stripPrefix(basePrefix)}:"
                         } else {
-                          lastImportComponent
+                          s"$lastImportComponent:"
                         }
                       }
                   }
@@ -414,7 +414,7 @@ object StructureParser {
   }
 
   @throws(classOf[CompilerException])
-  def findImports(tokens: Iterator[Token]): Seq[Seq[String]] = {
+  def findImports(tokens: Iterator[Token]): Seq[(Integer, Seq[String])] = {
     val reader = new SeqReader[Token](tokens.filter(_.tpe != TokenType.Comment).map(Namer0).to(LazyList), _.start)
     val combinators = new StructureCombinators
 
@@ -422,7 +422,7 @@ object StructureParser {
       case combinators.Success(declarations, _) => {
         declarations.flatMap(x =>
           x match {
-            case StructureDeclarations.Import(pathComponents, _, _, _) => Seq(pathComponents)
+            case StructureDeclarations.Import(pathComponents, upCount, _, _, _) => Seq((upCount, pathComponents))
             case _ => Seq()
           })
       }
