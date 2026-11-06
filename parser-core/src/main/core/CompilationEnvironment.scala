@@ -8,7 +8,8 @@ trait CompilationEnvironment {
   def resolveModulePath(
     currentFile:Option[String],
     upCount: Integer,
-    pathComponents: Seq[String]
+    pathComponents: Seq[String],
+    locatable: Option[SourceLocatable]
   ): Option[(String, Seq[String])]
   def exists(path: String): Boolean
   def getSource(filename: String): String
@@ -17,7 +18,12 @@ trait CompilationEnvironment {
 class DummyCompilationEnvironment extends CompilationEnvironment {
   def profilingEnabled = false
   def resolvePath(filename: String): String = filename
-  def resolveModulePath(currentFile: Option[String], upCount: Integer, modulePath: Seq[String]) = None
+  def resolveModulePath(
+    currentFile: Option[String],
+    upCount: Integer,
+    modulePath: Seq[String],
+    locatable: Option[SourceLocatable]
+  ): Option[(String, Seq[String])] = None
   def exists(filename: String): Boolean = false
   def getSource(filename: String): String =
     if (filename == "aggregate") "" else throw new UnsupportedOperationException

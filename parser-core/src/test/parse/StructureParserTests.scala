@@ -3,7 +3,7 @@
 package org.nlogo.parse
 
 import org.nlogo.core.{ CompilationOperand, DummyCompilationEnvironment, DummyExtensionManager,
-  DummyLibraryManager, CompilerException, Femto, StructureResults }
+  DummyLibraryManager, CompilerException, Femto, SourceLocatable, StructureResults }
 
 import org.nlogo._
 import org.scalatest.funsuite.AnyFunSuite
@@ -356,7 +356,8 @@ class StructureParserTests extends AnyFunSuite {
       override def resolveModulePath(
         currentFile: Option[String],
         upCount: Integer,
-        modulePath: Seq[String]
+        modulePath: Seq[String],
+        locatable: Option[SourceLocatable]
       ): Option[(String, Seq[String])] = {
 
         if (upCount > 0) {
